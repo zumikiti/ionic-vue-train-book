@@ -38,6 +38,31 @@ const items = [
       '新幹線',
     ],
   },
+  {
+    title: '山手線',
+    description: '',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Yamanote-Line-E235.jpg/2880px-Yamanote-Line-E235.jpg',
+    tags: [
+      '東京',
+      'みどり',
+    ],
+  },
+  {
+    title: '南海ラピート',
+    description: '',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Nankai_50000_series_50002F.jpg/2880px-Nankai_50000_series_50002F.jpg',
+    tags: [
+      '特急',
+      'あお',
+    ],
+  },
+  // {
+    // title: '',
+    // description: '',
+    // src: '',
+    // tags: [
+    // ],
+  // },
 ]
 
 export default items
