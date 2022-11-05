@@ -1,29 +1,46 @@
 <template>
   <div id="container">
-    <strong>{{ name }}</strong>
-    <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <ItemComponent
+      v-for="(item, i) in items"
+      :key="i"
+      :item="item" />
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import ItemComponent from "./ItemComponent.vue"
+import { Client } from "@notionhq/client"
+import { onMounted, ref } from "vue";
 
-export default defineComponent({
-  name: 'ExploreContainer',
-  props: {
-    name: String
-  }
-});
+const items = ref([]);
+
+const client = new Client({
+  auth: 'secret_k1sVgQjarupTD7Qdc5n2W1T1j1wkZaKfr3u4P3wcQs1',
+})
+
+const fetchItems = async () => {
+  const res = await client.databases.query({
+    database_id: 'db0f7e62548e4870a3e2ed49b25eca06',
+  })
+
+  items.value = res.results.map(o => {
+    return {
+      title: o.name.text.content,
+      description: o.description.rich_text.content,
+      src: o.src.rich_text.content,
+    }
+  })
+}
+
+onMounted(() => fetchItems())
 </script>
 
 <style scoped>
 #container {
   text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  max-width: 500px;
+  margin: auto;
+  --opacity: .5
 }
 
 #container strong {
