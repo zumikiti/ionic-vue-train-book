@@ -14,7 +14,9 @@
       
       <div id="container">
         <template v-if="isFinQuestion">
-          <h2>せいかいすう: {{ state.result }} / {{ questionCount }}</h2>
+          <h2>
+            せいかいすう: {{ state.result }} / {{ questionCount }}
+          </h2>
 
           <IonButton @click.prevent="onResetClick">
             もういっかい
@@ -22,7 +24,7 @@
         </template>
 
         <template v-else-if="state.question.src">
-          <h2>第{{state.questions.length + 1 }}問</h2>
+          <h2>第{{ state.questions.length + 1 }}問</h2>
           <img
             :src="state.question.src"
             width="500">
@@ -51,9 +53,9 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonButton } from '@ionic/vue';
-import { computed, inject, reactive, watch } from 'vue';
-import items from '@/consts/Item';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonButton, loadingController } from '@ionic/vue'
+import { computed, reactive, watch } from 'vue'
+import items from '@/consts/Item'
 
 const questionCount = 5
 
@@ -88,22 +90,27 @@ const addAnswer = (option:string) => {
 
   selectQuestion()
 }
-inject('addAnswer', addAnswer)
 
-watch(() => state.count, () => {
+const showLoading = async () => {
+  const loading = await loadingController.create({
+    message: 'けいさんちゅう...',
+    duration: 2000,
+  })
+  loading.present()
+}
+const isFinQuestion = computed(() => state.count < 0)
+watch(() => state.count, async () => {
   if (isFinQuestion.value === false) return
 
   state.questions.forEach((o, i) => {
-    console.log(o, 'option value')
-    console.log(state.answers[i], 'answer value')
-
     if (state.answers[i] === o) {
       state.result++
     }
   })
-}, { deep: true })
 
-const isFinQuestion = computed(() => state.count < 0)
+  await showLoading()
+})
+
 
 const onResetClick = () => {
   state.questions = []
