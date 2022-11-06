@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import items from '../consts/Item'
 import ExploreContainer from './ExploreContainer.vue';
-import { IonButton } from '@ionic/vue';
+import { IonButton, IonSpinner } from '@ionic/vue';
 
 const colorList = [
   'primary',
@@ -26,8 +26,11 @@ const tags = items
   .filter((x, i, self) => self.indexOf(x) === i)
 
 const choice = ref('')
-
+const isLoading = ref(false)
 const onTagClick = (tag:string) => {
+  isLoading.value = true
+  setTimeout(() => isLoading.value = false, 500)
+
   choice.value = tag 
 }
 
@@ -46,8 +49,11 @@ const displayItems = computed(() => {
       {{ tag }}
     </IonButton>
 
+    <p v-if="isLoading">
+      <IonSpinner />
+    </p>
     <ExploreContainer 
-      v-if="choice"
+      v-if="isLoading === false && choice"
       :items="displayItems" />
   </div>
 </template>
